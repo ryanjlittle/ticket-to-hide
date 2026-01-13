@@ -23,7 +23,12 @@ class BasicServer:
     def _handle_client(self, conn: socket.socket, msg: str):
         svr = Server(self.secrets, self.ticketer)
         start = perf_counter()
-        svr.connect_socket(conn)
+        try:
+            svr.connect_socket(conn)
+        except (ConnectionResetError, BrokenPipeError):
+            logger.info(f'handshake aborted early')
+            conn.close()
+            return
         stop = perf_counter()
         logger.info(f'handshake completed in {stop - start} seconds')
         while True:
