@@ -10,7 +10,9 @@ RESET="\033[0m"
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd $PROJECT_ROOT
 
-export OPENSSL_ROOT_DIR=/usr/include/openssl
+if [ -f "/usr/include/openssl" ]; then
+  export OPENSSL_ROOT_DIR=/usr/include/openssl
+fi
 
 if [ $# -ne 1 ]; then
     echo -e "${RED}Usage: $0 [-debug|-release]${RESET}"
@@ -27,14 +29,16 @@ else
 fi
 
 # Install and build primus-emp
-if [ -d "primus-emp" ]; then
+if [ -d "primus-emp/install/include/emp-ot" ] && [ -d "primus-emp/install/include/emp-tool" ] && [ -d "primus-emp/install/include/emp-zk" ]; then
   echo -e "${YELLOW}Found existing primus-emp installation, skipping compilation.${RESET}"
 else
   echo -e "${GREEN}Installing EMP toolkit (Primus lab fork)...${RESET}"
+  rm -rf primus-emp
   git clone https://github.com/primus-labs/primus-emp.git
   cd primus-emp
   git checkout 72f3f4f5a5c22a1cd008b27b233c4021f733b978
   echo -e "${GREEN}Compiling EMP toolkit...${RESET}"
+  export CMAKE_POLICY_VERSION_MINIMUM=3.5
   bash compile.sh -$BUILD_TYPE
   cd ..
 fi
@@ -45,7 +49,10 @@ bash src/cpp/compile.sh ./primus-emp -$BUILD_TYPE
 
 # Install Python dependencies
 echo -e "${GREEN}Installing Python dependencies...${RESET}"
-python3.13 -m venv venv
+if ! python3 -c 'import sys; sys.exit(sys.version_info < (3, 13))'; then
+  echo -e "${RED}Error: Python version 3.13+ required${RESET}"
+fi
+python3 -m venv venv
 source venv/bin/activate
 cd src/python
 
