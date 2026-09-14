@@ -1,6 +1,6 @@
 # Ticket to Hide
 
-__This repository contains an implementation of the TLS Oracle protocol in the work "Ticket to Hide: Practical, Private Proofs of Provenance for TLS".__
+__This repository contains an implementation of the TLS Oracle protocol described in the paper [Ticket to Hide: Practical, Private Proofs of Provenance for TLS](https://eprint.iacr.org/2026/540.pdf) by Ryan Little, Daniel S. Roche, and Mayank Varia.__
 
 This code has been tested on MacOS Sequoia and Amazon Linux 2023.
 
@@ -38,7 +38,7 @@ Ticket to Hide requires the following dependencies. For each, we list an install
 - Python 3.13+
   - Mac: `brew install python@3.13`
   - Amazon Linux: `sudo yum install -y python3.13`
-- C/C++ compiler and CMake
+- GCC/G++ 11
   - Mac: `xcode-select --install`
   - Amazon Linux: `sudo yum groupinstall "Development Tools"`
 - CMake
@@ -54,11 +54,11 @@ Ticket to Hide requires the following dependencies. For each, we list an install
  
 ## Building Ticket to Hide
 
-We provide a one-shot script for installation and compilation: `scripts/setup.sh`. To run, exectute
+We provide a one-shot script for installation and compilation: `scripts/setup.sh`. To run, execute
 ```
 ./scripts/setup.sh [debug|release]
 ```
-Running with the debug flag will compile a debuggable C++ program and enable logging. We recommend running in release mode to replicate the experiments performed in the paper.
+Running with the debug flag will compile a debuggable C++ program and enable logging. We recommend building in release mode to replicate the experiments performed in the paper.
 
 ## Running Ticket to Hide
 
@@ -149,7 +149,7 @@ Deploy 100 TLS servers on ports 9000-9099 by running
 ./scripts/deploy_servers.sh 100 9000
 ```
 
-Wait until you see `Listening on port XXX` log messages before starting the prover/verfifier.
+Wait until you see `Listening on port XXX` log messages before starting the prover/verifier.
 
 #### 2. Run prover 
 Switch to the machine to run the prover, or open a new console if running locally. Set the `BENCHMARK_SERVER_IP` environment variable to the IP address of the machine running the servers. To run locally, use 0.0.0.0:
@@ -162,7 +162,7 @@ To start the experiment with 10 iterations, run
 ```
 
 #### 3. Run verifier
-Switch to the machine to run the prover, or open a new console if running locally. Now set the `BENCHMARK_SERVER_IP` environment variable to the same value used for the prover. Additionally, set the `BENCHMARK_PROVER_IP` environment variable to the IP address of the prover (or 0.0.0.0 for local testing):
+Switch to the machine to run the verifier, or open a third console if running locally. Now set the `BENCHMARK_SERVER_IP` environment variable to the same value used for the prover. Additionally, set the `BENCHMARK_PROVER_IP` environment variable to the IP address of the prover (or 0.0.0.0 for local testing):
 
 ```
 export BENCHMARK_SERVER_IP=0.0.0.0
