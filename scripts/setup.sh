@@ -51,6 +51,7 @@ bash src/cpp/compile.sh ./primus-emp -$BUILD_TYPE
 echo -e "${GREEN}Installing Python dependencies...${RESET}"
 if ! python3 -c 'import sys; sys.exit(sys.version_info < (3, 13))'; then
   echo -e "${RED}Error: Python version 3.13+ required${RESET}"
+  exit 1
 fi
 python3 -m venv venv
 source venv/bin/activate
