@@ -13,9 +13,6 @@
 using namespace std;
 using namespace emp;
 
-const size_t QUERY_BYTE_LEN = 2 * 1024;
-const size_t RESPONSE_BYTE_LEN = 2 * 1024;
-
 const int threads = 1;
 
 template <typename IO>
@@ -101,7 +98,7 @@ void full_protocol(IO* io, IO* io_opt, COT<IO>* cot, int num_servers, int party)
         hex_str_to_bytes(hash_bytes, hash_hex);
         hs->set_prover_application_secrets(hash_bytes);
         delete[] hash_bytes;
-    } else if (party == VERIFIER) {
+    } else {
         vector<const unsigned char*> master_secs;
         string msec_hex;
         master_secs.reserve(num_servers);
@@ -164,7 +161,7 @@ void full_protocol(IO* io, IO* io_opt, COT<IO>* cot, int num_servers, int party)
         // send lengths to verifier
         io->send_data(&ptext_len, sizeof(uint64_t));
         io->send_data(&adata_len, sizeof(uint64_t));
-    } else if (party == VERIFIER) {
+    } else {
 
         // receive lengths from prover
         io->recv_data(&ptext_len, sizeof(uint64_t));
