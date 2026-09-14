@@ -60,6 +60,8 @@ We provide a one-shot script for installation and compilation: `scripts/setup.sh
 ```
 Running with the debug flag will compile a debuggable C++ program and enable logging. We recommend building in release mode to replicate the experiments performed in the paper.
 
+__Note:__ Compiling the dependency will produce a number of warnings, particularly integer signedness mismatches (`-Wsign-compare`) and unexpected null arguments (`-Wnonnull`). These are expected and benign.
+
 ## Running Ticket to Hide
 
 We provide Python scripts `src/python/tickettohide/run_prover.py` and `src/python/tickettohide/run_verifier.py` to run the full interaction. 
@@ -176,3 +178,5 @@ Start the experiment with the same number of iterations as the prover:
 Running the full experiment may take a few minutes. The results will be written to a file `benchmarks/results_XXX.csv` on the prover machine, where XXX is a UNIX timestamp.
 
 __Note:__ The experiment scripts create a lot of temporary files. If you encounter a `OSError: [Errno 24] Too many open files` error during the experiment, increase the OS file descriptor limit by running `ulimit -n 1024`.
+
+__Note:__ During server teardown, you may encounter errors of the form `OSError: [Errno 9] Bad file descriptor`. These are expected and benign.
